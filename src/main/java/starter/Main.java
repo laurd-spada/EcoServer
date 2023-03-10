@@ -6,22 +6,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         try(ServerSocket serverSocket = new ServerSocket(5000)){
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-
             while(true){
-                String echoString = bufferedReader.readLine();
-                if(echoString.equals("exit")){
-                    break;
-                }
-                printWriter.println("Echo from server : " + echoString);
-                System.out.println(echoString);
+                new Echoer(serverSocket.accept()).start();
+
+//                Socket socket = serverSocket.accept();
+//                Echoer echoer = new Echoer(socket);
+//                echoer.start();
+
             }
         } catch (IOException e){
             System.out.println("Server exception " + e.getMessage());
